@@ -46,3 +46,14 @@ load_sources({
 })
 load_colorscheme_async(vim.g.default_colorscheme)
 load_sources_async({ "base.4-mappings" })
+
+vim.opt.wrap = false
+vim.opt.shiftwidth = 4
+vim.opt.tabstop = 4
+
+-- For Mipsy plugin. Follow instructions if you wanna install:
+-- https://github.com/XavierCooney/mipsy-editor-features?tab=readme-ov-file#neovim
+
+--local lspconfig = require("lspconfig")
+--require('mipsy').setup()
+--lspconfig.mipsy_editor_features.setup({})

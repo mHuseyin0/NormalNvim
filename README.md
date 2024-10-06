@@ -31,22 +31,22 @@ If you are new here don't forget to [check the wiki](https://github.com/NormalNv
 
 ## How to install
 
-### Installer (Linux/MacOS/WSL)
+### Installer (Linux/MacOS/WSL) (Original Repo)
 You can preview it [here](https://github.com/NormalNvim/installer)
 ```sh
 wget -q https://raw.githubusercontent.com/NormalNvim/installer/main/installer.sh && chmod +x installer.sh && ./installer.sh
 ```
 
-### Clone manually (Linux/MacOS/WSL)
+### Clone manually (Linux/MacOS/WSL) (With My Config)
 ```sh
 # Strongly recommended: Fork the repo and clone YOUR fork.
-git clone https://github.com/NormalNvim/NormalNvim.git ~/.config/nvim
+git clone https://github.com/mHuseyin0/NormalNvim.git ~/.config/nvim
 ```
 
-### Clone manually (Windows)
+### Clone manually (Windows) (With My Config)
 ```sh
 # Strongly recommended: Fork the repo and clone YOUR fork.
-git clone https://github.com/NormalNvim/NormalNvim.git %USERPROFILE%\AppData\Local\nvim && nvim
+git clone https://github.com/mHuseyin0/NormalNvim.git %USERPROFILE%\AppData\Local\nvim && nvim
 ```
 
 ### Optional dependencies
