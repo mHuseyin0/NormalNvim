@@ -48,9 +48,18 @@ load_colorscheme_async(vim.g.default_colorscheme)
 load_sources_async({ "base.4-mappings" })
 
 vim.opt.wrap = false
-vim.opt.shiftwidth = 4
-vim.opt.tabstop = 4
+vim.opt.shiftwidth = 8
+vim.opt.tabstop = 8
 
+-- Copy to and paste from system buffer
+vim.opt.clipboard = "unnamedplus"
+-- In order to pass .vimrc config to nvim
+vim.cmd([[
+        set runtimepath^=~/.vim runtimepath+=~/.vim/after
+        let &packpath = &runtimepath
+        source ~/.vimrc
+        ]])
+vim.b.minianimate_config = { scroll = { enable = false } }
 -- For Mipsy plugin. Follow instructions if you wanna install:
 -- https://github.com/XavierCooney/mipsy-editor-features?tab=readme-ov-file#neovim
 
