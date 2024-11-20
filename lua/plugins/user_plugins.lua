@@ -74,7 +74,4 @@ return
                                 -- ...
                         end
                 },
-                {
-                        "marioortizmanero/adoc-pdf-live.nvim",
-                },
         }
