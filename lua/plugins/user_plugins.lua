@@ -74,4 +74,11 @@ return
                                 -- ...
                         end
                 },
+                {
+	                "chrisgrieser/nvim-scissors",
+	                dependencies = "nvim-telescope/telescope.nvim",
+	                opts = {
+		                snippetDir = "/home/huseyin/.local/share/nvim/lazy/friendly-snippets/snippets",
+	                }
+                },
         }
