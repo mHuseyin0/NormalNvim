@@ -12,7 +12,6 @@
 --       -> mason-lspconfig                [auto start lsp]
 --       -> nvim-lspconfig                 [lsp configs]
 --       -> mason.nvim                     [lsp package manager]
---       -> SchemaStore.nvim               [mason extra schemas]
 --       -> none-ls-autoload.nvim          [mason package loader]
 --       -> none-ls                        [lsp code formatting]
 --       -> garbage-day                    [lsp garbage collector]
@@ -24,9 +23,9 @@
 --       -> cmp-nvim-path                  [auto completion path]
 --       -> cmp-nvim-lsp                   [auto completion lsp]
 --       -> cmp-luasnip                    [auto completion snippets]
+--       -> cmp-copilot                    [auto completion copilot]
 
 local utils = require("base.utils")
-local utils_lsp = require("base.utils.lsp")
 
 return {
   --  TREE SITTER ---------------------------------------------------------
@@ -223,20 +222,26 @@ return {
 
   -- mason-lspconfig [auto start lsp]
   -- https://github.com/mason-org/mason-lspconfig.nvim
-  -- This plugin auto starts the lsp servers installed by Mason
-  -- every time Neovim trigger the event FileType.
+  -- This plugin auto start the lsp clients installed by Mason.
   {
     "mason-org/mason-lspconfig.nvim",
     dependencies = { "neovim/nvim-lspconfig" },
     event = "User BaseFile",
-    opts = function(_, opts)
-      if not opts.handlers then opts.handlers = {} end
-      opts.handlers[1] = function(server) utils_lsp.setup(server) end
-    end,
+    opts = {},
     config = function(_, opts)
       require("mason-lspconfig").setup(opts)
-      utils_lsp.apply_default_lsp_settings() -- Apply our default lsp settings.
-      utils.trigger_event("FileType")        -- This line starts this plugin.
+      utils.apply_lsp_diagnostic_defaults() -- Only needs to be called once.
+
+      -- Apply the lsp mappings to each client in each buffer.
+      vim.api.nvim_create_autocmd('LspAttach', {
+        callback = function(args)
+          local client = vim.lsp.get_client_by_id(args.data.client_id)
+          local bufnr = args.buf
+          if client and client.name then
+            utils.apply_user_lsp_mappings(client.name, bufnr)
+          end
+        end,
+      })
     end,
   },
 
@@ -270,17 +275,9 @@ return {
     }
   },
 
-  --  Schema Store [mason extra schemas]
-  --  https://github.com/b0o/SchemaStore.nvim
-  --  We use this plugin in ../base/utils/lsp.lua
-  "b0o/SchemaStore.nvim",
-
   -- none-ls-autoload.nvim [mason package loader]
   -- https://github.com/zeioth/mason-none-ls.nvim
-  -- This plugin auto starts the packages installed by Mason
-  -- every time Neovim trigger the event FileType ().
-  -- By default it will use none-ls builtin sources.
-  -- But you can add external sources if a mason package has no builtin support.
+  -- This plugin auto start the none-ls clients installed by Mason.
   {
     "zeioth/none-ls-autoload.nvim",
     event = "User BaseFile",
@@ -329,9 +326,6 @@ return {
         command = "shfmt",
         args = { "-i", "2", "-filename", "$FILENAME" },
       })
-
-      -- Attach the user lsp mappings to every none-ls client.
-      return { on_attach = utils_lsp.apply_user_lsp_mappings }
     end
   },
 
@@ -418,7 +412,6 @@ return {
         { path = "mason-lspconfig.nvim", mods = { "mason-lspconfig" } },
         { path = "mason.nvim", mods = { "mason", "mason-core", "mason-registry", "mason-vendor" } },
         { path = "mason-extra-cmds", mods = { "masonextracmds" } },
-        { path = "SchemaStore.nvim", mods = { "schemastore" } },
         { path = "none-ls-autoload.nvim", mods = { "none-ls-autoload" } },
         { path = "none-ls.nvim", mods = { "null-ls" } },
         { path = "lazydev.nvim", mods = { "" } },
